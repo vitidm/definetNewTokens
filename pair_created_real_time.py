@@ -4,10 +4,7 @@ import asyncio
 import random
 import requests
 from web3 import Web3
-from requests import get
 import mysql.connector
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup as soup
 from datetime import datetime
 
 ETHERSCAN_API_KEY = 'B1V982TXGKY38KGM6E4WIHUFZU7DGXDWTP'
@@ -27,35 +24,6 @@ uniswap_factory = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
 uniswap_factory_abi = json.loads('[{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"","type":"uint256"}],"name":"PairCreated","type":"event"},{"constant":true,"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"tokenA","type":"address"},{"internalType":"address","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]')
 
 class InsertDbJson():
-    # def insertToken(self, token_info):
-    #     with open('new_tokens.json', 'r+') as json_file:
-    #         feeds = json.load(json_file)
-    #         log_data = token_info
-    #         json_file.seek(0)
-    #         feeds["tokens"].append(log_data)
-                
-    #         json.dump(feeds, json_file, indent=4)
-
-    #     json_file.close()
-    #     print(token_info)
-
-    # def readJsonAndRemove(self, token_info):
-    #     with open('members.json', 'r+') as f:
-    #         data = json.load(f)
-    #         data['data'] = token_info 
-    #         f.seek(0)       
-    #         json.dump(data, f, indent=4)
-    #         f.truncate() 
-        
-    #     time.sleep(1)
-
-    #     with open('members.json', 'r+') as f:
-    #             data = json.load(f)
-    #             data['data'] = {} 
-    #             f.seek(0)       
-    #             json.dump(data, f, indent=4)
-    #             f.truncate() 
-    
     def mysqlConnector(self, launch_date, token_address, pair_address, token_name, token_symbol,token_supply, creator_address, creator_eth_balance, token_url, dexcreener):
         # Connect to the database
         cnx = mysql.connector.connect(
@@ -82,17 +50,21 @@ class InsertDbJson():
 
 class FindEtherscan():
     def build_url(self, TOKEN_ADDRESS):
-        URL = "https://etherscan.io/token/" + TOKEN_ADDRESS
-        req = Request(URL, headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}) 
-        
-        response = urlopen(req, timeout=20).read()
-        page_soup = soup(response, "html.parser")
+        url = "https://api.etherscan.io/api"
 
-        token_name = page_soup.find("span", {"class": "fs-6 fw-medium"}).find("span", {"class": "text-muted"}).text.replace('(', '').replace(')','')
-        token_symbol = page_soup.find("div", {"class": "d-flex align-items-center"}).text
-        
-        index = token_symbol.find('0 ')
-        token_symbol = token_symbol[index:].replace('0 ', '').replace('\n', '')
+        params = {
+            "module": "token",
+            "action": "tokeninfo",
+            "contractaddress": TOKEN_ADDRESS,
+            "apikey": "B1V982TXGKY38KGM6E4WIHUFZU7DGXDWTP",
+        }
+
+        response = requests.get(url, params=params)
+
+        data = json.loads(response.text)
+        token_name = data["result"][0]["tokenName"]
+        token_symbol = data["result"][0]["symbol"]
+
         return token_name, token_symbol
 
     def creator_balance(self, TOKEN_ADDRESS):
@@ -171,14 +143,9 @@ class FindEtherscan():
                 build_dexscreener
             )
 
-            # InsertDbJson().insertToken(token_info)
-            #InsertDbJson().readJsonAndRemove(token_info)
-            
             return token_info
         
-#FindEtherscan().init_etherscan("0x9331b85682ce4aa1947bb15fb11d934eecbf539c")
 class SyncToken():
-    # define function to handle events and print to the console
     def handle_event(self, event):
         token_address_args = json.loads(Web3.toJSON(event))["args"]
         
