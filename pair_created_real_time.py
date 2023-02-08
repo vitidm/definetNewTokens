@@ -172,7 +172,7 @@ class FindEtherscan():
             )
 
             # InsertDbJson().insertToken(token_info)
-            InsertDbJson().readJsonAndRemove(token_info)
+            #InsertDbJson().readJsonAndRemove(token_info)
             
             return token_info
         
