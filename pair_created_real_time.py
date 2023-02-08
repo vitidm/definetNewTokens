@@ -15,7 +15,7 @@ infura_url_viti = "https://mainnet.infura.io/v3/a69b219fbd54407faa5af30d764526ef
 infura_url = 'https://mainnet.infura.io/v3/60588a2725ef46fcb8a5a10bbcf10362'
 infura_fxindepth = 'https://mainnet.infura.io/v3/c1240437c0004bda83c8faa35d1755ff'
 
-random_infura = [infura_url_viti, infura_url, infura_fxindepth]
+random_infura = [infura_url, infura_fxindepth]
 random_ETHERSCAN_API = [ETHERSCAN_API_KEY, EHTERSCAN_API_KEY_LV]
 
 # uniswap address and abi
