@@ -181,36 +181,34 @@ class SyncToken():
     # define function to handle events and print to the console
     def handle_event(self, event):
         token_address_args = json.loads(Web3.toJSON(event))["args"]
-        try:
-            if token_address_args["token0"] != "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" and token_address_args["token1"] == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2":
-                TOKEN_ADDRESS = token_address_args["token0"].replace(' ', '')
-                PAIR_ADDRESS = token_address_args["pair"].replace(' ', '')
+        
+        if token_address_args["token0"] != "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" and token_address_args["token1"] == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2":
+            TOKEN_ADDRESS = token_address_args["token0"].replace(' ', '')
+            PAIR_ADDRESS = token_address_args["pair"].replace(' ', '')
 
-                print(json.loads(Web3.toJSON(event)))
-                time.sleep(3)
-                token_info = FindEtherscan().init_etherscan(TOKEN_ADDRESS, PAIR_ADDRESS)
+            print(json.loads(Web3.toJSON(event)))
+            time.sleep(3)
+            token_info = FindEtherscan().init_etherscan(TOKEN_ADDRESS, PAIR_ADDRESS)
 
-                time.sleep(1)
-                
-                return token_info
-                
-            elif token_address_args["token1"] != "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" and token_address_args["token0"] == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2":
-                TOKEN_ADDRESS = token_address_args["token1"].replace(' ', '')
-                PAIR_ADDRESS = token_address_args["pair"].replace(' ', '')
-                
-                print(json.loads(Web3.toJSON(event)))
-                time.sleep(3)
-                token_info = FindEtherscan().init_etherscan(TOKEN_ADDRESS, PAIR_ADDRESS)
+            time.sleep(1)
+            
+            return token_info
+            
+        elif token_address_args["token1"] != "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" and token_address_args["token0"] == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2":
+            TOKEN_ADDRESS = token_address_args["token1"].replace(' ', '')
+            PAIR_ADDRESS = token_address_args["pair"].replace(' ', '')
+            
+            print(json.loads(Web3.toJSON(event)))
+            time.sleep(3)
+            token_info = FindEtherscan().init_etherscan(TOKEN_ADDRESS, PAIR_ADDRESS)
 
-                time.sleep(1)
+            time.sleep(1)
 
-                return token_info
+            return token_info
 
-            else:
-                pass
-        except:
-            print("ERROR ON A TOKEN")
+        else:
             pass
+        
 
     async def log_loop(self, event_filter, poll_interval):
         while True:
