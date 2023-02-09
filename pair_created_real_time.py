@@ -14,8 +14,13 @@ EHTERSCAN_API_KEY_LV = 'M1TVWJZKFJ9RIEJDE6C6DX35ZJ8IV8IEGH'
 infura_url_viti = "https://mainnet.infura.io/v3/a69b219fbd54407faa5af30d764526ef"
 infura_url = 'https://mainnet.infura.io/v3/60588a2725ef46fcb8a5a10bbcf10362'
 infura_fxindepth = 'https://mainnet.infura.io/v3/c1240437c0004bda83c8faa35d1755ff'
+infura_url_97dm = 'https://mainnet.infura.io/v3/457fbd6509e5473fb8acc23193ae1633'
+infura_funnygram = 'https://mainnet.infura.io/v3/9d9db586517d424ba8ebfd229ec88aca'
+infura_infofunnygram = 'https://mainnet.infura.io/v3/72f66800c7c744009796d2ccbc53d7f4'
+infura_igfuturemillionaires = 'https://mainnet.infura.io/v3/9d9db586517d424ba8ebfd229ec88aca'
+infura_infohellraiser = 'https://mainnet.infura.io/v3/60588a2725ef46fcb8a5a10bbcf10362'
 
-random_infura = [infura_url_viti]
+random_infura = [infura_url_viti, infura_url, infura_fxindepth, infura_url_97dm, infura_funnygram, infura_igfuturemillionaires, infura_infohellraiser]
 random_ETHERSCAN_API = [ETHERSCAN_API_KEY, EHTERSCAN_API_KEY_LV]
 
 # uniswap address and abi
@@ -188,18 +193,22 @@ class SyncToken():
     def main(self):
         loop = asyncio.get_event_loop()
         
-        try:
-            web3 = Web3(Web3.HTTPProvider(random.choice(random_infura)))
-            contract = web3.eth.contract(address=uniswap_factory, abi=uniswap_factory_abi)
-            
-            event_filter = contract.events.PairCreated.createFilter(fromBlock='latest')
-            loop.run_until_complete(
-                asyncio.gather(
-                    self.log_loop(event_filter, 2)))
-
-            loop.close()       
-        finally:
-            loop.close()
+        for url in random_infura:
+            try:
+                print(f"GOOD INFURA API - {url}")
+                web3 = Web3(Web3.HTTPProvider(url))
+                contract = web3.eth.contract(address=uniswap_factory, abi=uniswap_factory_abi)
+                
+                event_filter = contract.events.PairCreated.createFilter(fromBlock='latest')
+                loop.run_until_complete(
+                    asyncio.gather(
+                        self.log_loop(event_filter, 2)))
+                break
+            except:
+                print(f"ERROR - {url}")
+                continue
+                
+        loop.close()     
 
 if __name__ == '__main__':
     SyncToken().main()
