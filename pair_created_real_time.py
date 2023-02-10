@@ -15,12 +15,13 @@ infura_url_viti = "https://mainnet.infura.io/v3/a69b219fbd54407faa5af30d764526ef
 infura_url = 'https://mainnet.infura.io/v3/60588a2725ef46fcb8a5a10bbcf10362'
 infura_fxindepth = 'https://mainnet.infura.io/v3/c1240437c0004bda83c8faa35d1755ff'
 infura_url_97dm = 'https://mainnet.infura.io/v3/457fbd6509e5473fb8acc23193ae1633'
+infura_dennis_matios = 'https://mainnet.infura.io/v3/d2f78ad6cdd04364a78505084a561142'
 infura_funnygram = 'https://mainnet.infura.io/v3/9d9db586517d424ba8ebfd229ec88aca'
 infura_infofunnygram = 'https://mainnet.infura.io/v3/72f66800c7c744009796d2ccbc53d7f4'
 infura_igfuturemillionaires = 'https://mainnet.infura.io/v3/9d9db586517d424ba8ebfd229ec88aca'
 infura_infohellraiser = 'https://mainnet.infura.io/v3/60588a2725ef46fcb8a5a10bbcf10362'
 
-random_infura = [infura_url_viti, infura_url, infura_fxindepth, infura_url_97dm, infura_funnygram, infura_igfuturemillionaires, infura_infohellraiser]
+random_infura = [infura_url_viti, infura_url, infura_fxindepth, infura_url_97dm, infura_dennis_matios, infura_infofunnygram, infura_funnygram, infura_igfuturemillionaires, infura_infohellraiser]
 random_ETHERSCAN_API = [ETHERSCAN_API_KEY, EHTERSCAN_API_KEY_LV]
 
 # uniswap address and abi
